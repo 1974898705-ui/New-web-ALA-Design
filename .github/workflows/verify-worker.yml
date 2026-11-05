@@ -27,12 +27,13 @@ jobs:
           WORKER_URL: https://ala-design-image-api.ai-creative-platform.workers.dev/api/generate-image
         run: |
           response_file="${RUNNER_TEMP}/worker-response.json"
-          curl --fail --silent --show-error \
+          status_code="$(curl --silent --show-error \
             --retry 3 --retry-all-errors --retry-delay 5 --max-time 120 \
             -H 'Origin: https://1974898705-ui.github.io' \
             -H 'Content-Type: application/json' \
             -H 'X-ALA-Client: ala-design-web' \
             --data '{"prompt":"A compact flat festive gift ornament, no text, transparent-looking simple composition","steps":1,"seed":20261105}' \
             "$WORKER_URL" \
-            --output "$response_file"
-          node -e "const fs=require('node:fs');const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(!p.image?.startsWith('data:image/jpeg;base64,')||p.image.length<1000)process.exit(1);console.log(JSON.stringify({ok:true,provider:p.provider,model:p.model,imageCharacters:p.image.length}))" "$response_file"
+            --output "$response_file" \
+            --write-out '%{http_code}')"
+          node -e "const fs=require('node:fs');const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));const status=Number(process.argv[2]);if(status>=400||!p.image?.startsWith('data:image/jpeg;base64,')||p.image.length<1000){console.error(JSON.stringify({status,error:p.error,code:p.code}));process.exit(1)}console.log(JSON.stringify({ok:true,provider:p.provider,model:p.model,imageCharacters:p.image.length}))" "$response_file" "$status_code"
