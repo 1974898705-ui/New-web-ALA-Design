@@ -1,0 +1,129 @@
+---
+schema_version: '1.0'
+rule_set: validation
+result_model:
+  pass: No hard rejection condition is present.
+  fail: At least one hard rejection condition is present.
+  warnings_may_override_fail: false
+measurement_priority:
+- source_scene_graph
+- export_metadata
+- raster_analysis
+hard_reject:
+  layout:
+  - code: LAYOUT_CANVAS_MISMATCH
+    condition: Canvas is not exactly 279x400 or background is not transparent.
+  - code: LAYOUT_CARD_CHANGED
+    condition: Card logical box differs from x=30, y=65, w=219, h=240.
+  - code: LAYOUT_TITLE_CHANGED
+    condition: Title text box differs from x=45, y=87, w=189, h=45.
+  - code: LAYOUT_CTA_CHANGED
+    condition: CTA box differs from x=21, y=326, w=237, h=44.
+  - code: LAYOUT_CONTENT_DECORATION_COLLISION
+    condition: A decorative motif or cutout enters the title or offer text safe zone.
+      Solid backing fills are allowed.
+  - code: LAYOUT_OFFER_TEXT_CHANGED
+    condition: Offer text safe box differs from x=45, y=163, w=189, h=105, or text
+      leaves it.
+  top_visual:
+  - code: TOP_WIDTH_NOT_50_PERCENT
+    condition: Complete top-visual cluster width is not exactly 50% of the 219 px
+      card width in logical/vector coordinates, or exceeds 109 px in integer raster
+      output.
+  - code: TOP_NOT_CENTERED
+    condition: Top-visual cluster center_x differs from 139.5.
+  - code: TOP_WRONG_LAYER
+    condition: Top visual is not behind the card or is not visibly occluded by it.
+  - code: TOP_TOO_DENSE
+    condition: Top visual forms a scene, fills both sides, or competes with the offer.
+  - code: TOP_MULTIPLE_HEROES
+    condition: More than one equal-size primary theme object is present.
+  cta:
+  - code: CTA_COLOR_CHANGED
+    condition: 'CTA fill is not exactly #1A55FF.'
+  - code: CTA_NOT_INDEPENDENT
+    condition: CTA is attached to, grouped with, or exported together with the card
+      asset only.
+  - code: CTA_NOT_PILL
+    condition: CTA is not a 237x44 pill with 22 px radius.
+  - code: CTA_DECORATION_PRESENT
+    condition: CTA contains an icon, hand, arrow, star, spark, confetti, badge, or
+      theme element.
+  - code: CTA_EXCLUSION_ZONE_OCCUPIED
+    condition: Any non-CTA graphic appears in x=0, y=305, w=279, h=95.
+  typography:
+  - code: FONT_FAMILY_MISMATCH
+    condition: Any visible text uses a font family other than Roboto.
+  - code: FONT_WEIGHT_MISMATCH
+    condition: Any text role uses a weight different from typography.yaml.
+  - code: FONT_SUBSTITUTED
+    condition: Roboto is unavailable and a fallback or synthetic substitute is used.
+  - code: TEXT_DEFORMED
+    condition: Text is stylized, distorted, or redrawn as illustration.
+  content_hierarchy:
+  - code: OFFER_NOT_PRIMARY
+    condition: Offer is not the strongest visual information element.
+  - code: OFFER_UNREADABLE
+    condition: Offer has insufficient contrast, collision, clipping, or crowding.
+  - code: TITLE_OVERFLOW
+    condition: Title exceeds two lines or leaves its fixed box.
+  edge_language:
+  - code: EDGE_RANDOM_OR_ORGANIC
+    condition: Edge uses random waves, liquid drips, organic blobs, or irregular hand-drawn
+      cuts.
+  - code: EDGE_CHANGES_LAYOUT
+    condition: Edge treatment changes the logical card box or content coordinates.
+  - code: EDGE_LOCATION_INVALID
+    condition: Decorative edge bands are missing from left, right or bottom, or a
+      decorative band is added to the top edge.
+  - code: EDGE_VISUALLY_FRAGMENTED
+    condition: At final size, small cuts, holes and repeated marks create competing
+      fragments instead of one clear border rhythm.
+  - code: EDGE_REPEAT_COUNT_INVALID
+    condition: Left or right straight edge has fewer than 7 or more than 9 complete
+      repeated contour units, or bottom has fewer than 5 or more than 7; corner transitions
+      are excluded.
+  - code: EDGE_CORNER_DISCONTINUITY
+    condition: Corner/termination has displaced joins, gaps, accidental spurs, mismatched
+      half-motifs or overlap lumps; broad color split interrupts the shared silhouette.
+  style:
+  - code: STYLE_GRADIENT
+    condition: Any gradient appears, including the top visual.
+  - code: STYLE_REALISTIC_SHADOW
+    condition: Any realistic shadow or realistic lighting is present.
+  - code: STYLE_OVERDECORATED
+    condition: More than four standalone micro decorations or a competing second cluster;
+      integrated illustration details and repeating border units are evaluated by
+      density, not this count.
+  - code: TOP_NOT_FLAT_VECTOR
+    condition: Top visual uses gloss, lighting-based highlights, volumetric shading,
+      material simulation or 3D rendering instead of flat vector-style color shapes
+      and patterns.
+  colors:
+  - code: COLOR_CORE_ABSENT
+    condition: The design does not use the approved core palette as its chromatic
+      basis.
+  - code: COLOR_TOO_MANY
+    condition: More than four unrelated base chromatic palette colors including CTA;
+      local top-illustration shades do not add palette colors.
+  - code: COLOR_UNRELATED_THEME_PALETTE
+    condition: Auxiliary colors are not adjacent to the approved core palette.
+  - code: COLOR_RAINBOW
+    condition: The design reads as a rainbow or multi-hue palette.
+  - code: COLOR_CONTAINER_TEMPLATE
+    condition: Text regions are automatically rendered as separate plain inset rectangles
+      instead of direct color partition or intentionally coordinated decorated frames.
+manual_review:
+- Theme is recognizable from compact symbols rather than a full scene.
+- The popup feels like a stable financial product first and a festive promotion second.
+- Negative space remains visible around the top visual, offer, and CTA.
+- Edge treatment resembles a controlled paper-cut/coupon family rather than arbitrary
+  geometry.
+- Upper/lower two-color composition is valid; no mandatory third large field.
+- Simple geometric edge repetition is valid when coordinated with the silhouette and
+  separator.
+- Internal cutouts, visible panels and frames are optional, never required.
+- Top illustration stays flat-vector, with richness from color-shape layering, patterns,
+  accessories and occlusion.
+- Verify left/right/bottom repeat counts independently, excluding corners; inspect
+  corner joins at native size and 4x.

@@ -1,0 +1,68 @@
+schema_version: "1.0"
+rule_set: "cta"
+
+asset:
+  id: "cta_asset"
+  independent_from_card: true
+  separate_layer_required: true
+  separate_file_required: true
+  transparent_background: true
+  tight_crop:
+    width: 237
+    height: 44
+
+geometry:
+  composite_bounding_box:
+    x: 21
+    y: 326
+    width: 237
+    height: 44
+  shape: "pill"
+  border_radius: 22
+  locked: true
+
+appearance:
+  fill: "#1A55FF"
+  text_color: "#FFFFFF"
+  shadow_allowed: false
+  gradient_allowed: false
+  outline_allowed: false
+  locked: true
+
+exclusion_zone:
+  composite_bounding_box:
+    x: 0
+    y: 305
+    width: 279
+    height: 95
+  allowed_content:
+    - "cta_asset"
+  all_other_content_allowed: false
+  rules:
+    - "The full horizontal band around the CTA must remain visually empty."
+    - "No object may bridge the card and CTA."
+    - "The card-to-CTA gap from y=305 to y=326 must be empty."
+
+content:
+  text_only: true
+  icon_allowed: false
+  theme_element_allowed: false
+  decoration_allowed: false
+
+forbidden:
+  - "hand"
+  - "finger"
+  - "emoji"
+  - "icon"
+  - "arrow"
+  - "star"
+  - "spark"
+  - "confetti"
+  - "badge"
+  - "theme_symbol"
+  - "shadow"
+  - "gradient"
+  - "decorative_outline"
+  - "card_connection"
+  - "shared_card_layer"
+

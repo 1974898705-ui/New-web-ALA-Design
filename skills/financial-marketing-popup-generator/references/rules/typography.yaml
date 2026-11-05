@@ -1,0 +1,69 @@
+schema_version: "1.0"
+rule_set: "typography"
+
+family:
+  name: "Roboto"
+  required: true
+  fallback_allowed: false
+  source_policy: "official_open_source_reference_only"
+  license: "SIL Open Font License 1.1"
+
+official_sources:
+  google_fonts_specimen: "https://fonts.google.com/specimen/Roboto"
+  google_fonts_repository: "https://github.com/google/fonts/tree/main/ofl/roboto"
+  license_text_in_repository: "https://github.com/google/fonts/blob/main/ofl/roboto/OFL.txt"
+  official_ofl_site: "https://openfontlicense.org/"
+  informational_variable_font_file: "Roboto[wdth,wght].ttf"
+
+distribution:
+  include_font_files_in_package: false
+  redistribute_font_files_from_package: false
+  instruction: >-
+    The host platform must acquire Roboto from an official source and load it in
+    its own font system. This package contains references and mappings only.
+
+role_mapping:
+  title:
+    family: "Roboto"
+    style_name: "Roboto Bold"
+    weight: 700
+    locked: true
+  benefit_description:
+    family: "Roboto"
+    style_name: "Roboto Regular"
+    weight: 400
+    locked: true
+  offer_primary_value:
+    family: "Roboto"
+    style_name: "Roboto Black"
+    weight: 900
+    locked: true
+  offer_percentage:
+    family: "Roboto"
+    style_name: "Roboto Black"
+    weight: 900
+    locked: true
+  offer_suffix:
+    family: "Roboto"
+    style_name: "Roboto Medium"
+    weight: 500
+    locked: true
+  offer_supporting_text:
+    family: "Roboto"
+    style_name: "Roboto Medium"
+    weight: 500
+    locked: true
+  cta:
+    family: "Roboto"
+    style_name: "Roboto Black"
+    weight: 900
+    locked: true
+
+rendering_constraints:
+  substitute_font_allowed: false
+  stylize_as_illustration_allowed: false
+  deform_text_allowed: false
+  redraw_text_as_shape_allowed: false
+  preserve_legibility: true
+  missing_font_behavior: "hard_reject"
+

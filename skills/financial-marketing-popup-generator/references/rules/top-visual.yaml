@@ -1,0 +1,82 @@
+---
+schema_version: '1.0'
+rule_set: top_visual
+role: theme_identifier
+layer_relation:
+  must_be_behind_card: true
+  z_index: 10
+  card_z_index: 20
+  occlusion_required: true
+  description: The lower part of the theme cluster is covered by the card, so the
+    visual appears to rise from behind the card rather than sitting on top of it.
+geometry:
+  reference: layout.components.card.bounding_box.width
+  reference_width: 219
+  width_ratio:
+    value: 0.5
+    locked: true
+    tolerance: 0.0
+  logical_width: 109.5
+  raster_integer_rule: Use a visible bounding width of 109 px; never round upward.
+  horizontal_alignment: center
+  center_x: 139.5
+  side_clearance_logical: 54.75
+  height:
+    preferred: 34
+    maximum: 44
+  card_overlap:
+    preferred_range: 8-18
+    unit: px
+  constraints:
+  - The complete cluster, including supporting and micro elements, is measured as
+    one bounding box.
+  - No part of the complete cluster may exceed the 50% width boundary.
+  - Keep visible empty space on both sides.
+  - Never create an edge-to-edge or full-width header illustration.
+composition:
+  primary_element:
+    count: 1
+    scale: small_to_medium
+    dominance: clear
+  supporting_elements:
+    count:
+      min: 1
+      max: 3
+    scale: small
+  micro_elements:
+    count:
+      min: 0
+      max: 2
+    scale: tiny
+  richness: A compact flat-vector festive composition with readable internal patterns
+    and supporting pieces; match user reference without rendering material or volume.
+  recognition_method: A coherent overlapping thematic composition, not scenery.
+  constraints:
+  - Use one recognizable focal group with theme-appropriate supporting objects.
+  - Build richness through layered flat color shapes, internal patterns, accessories
+    and occlusion, not gradients, gloss or volumetric shading.
+  - 'Reference richness: a decorated hat with floral accents, fruit arrangement, or
+    Christmas gifts with bow, bells and pine sprigs. Adapt to current theme.'
+  - Keep the cluster compact, behind the card, and secondary to offer/title/CTA.
+style:
+- flat_vector_illustration
+- solid_color_shapes
+- readable_internal_patterns
+- compact_overlapping_composition
+- no_gradient_gloss_or_volume
+forbidden:
+- width_above_50_percent
+- full_width_visual
+- edge_to_edge_visual
+- visual_in_front_of_card
+- off_center_cluster
+- large_scene
+- landscape
+- character_group
+- multiple_equal_hero_objects
+- dense_cluster
+- offer_competition
+- gradient
+- gloss
+- volumetric_shading
+- material_rendering

@@ -1,0 +1,93 @@
+---
+schema_version: '1.3'
+rule_set: edge_language
+principle: 'Reference the user artwork: deliberate repeated silhouettes, broad color
+  regions and restrained coordinating border marks. Complexity and perforation are
+  not quality requirements.'
+outer_card:
+  logical_box_may_change: false
+  active_edges:
+  - left
+  - right
+  - bottom
+  top_edge: Quiet silhouette; a color-separator pattern is not a top border.
+  density: Judge at actual 279x400. Avoid tiny holes, thin bridges and simultaneous
+    competing patterns on all three edges. Simple repeated scallops or triangular
+    cuts can be finished designs.
+  placement: Stay within card x=30..249, y=65..305 and outside inset text safe zones.
+    Maintain clean CTA gap.
+  hierarchy: Use the same coherent contour family around left, bottom and right, with
+    natural corner transitions; avoid separately pasted edge strips.
+  allowed_profiles:
+    rounded_scallop: Broad continuous lobes; optional sparse inner dots.
+    triangular_hem: Simple repeated triangular cuts, optionally with one small inset
+      dot per unit.
+    stepped_diamond: Readable stepped contour, no mandatory interior holes.
+    petal_lace: Large linked petals, with few or no interior cuts.
+    radial_fan: Broad fan forms; sparse radial detail only if readable.
+    offset_color_scallop: A second palette color peeks behind offset lobes, creating
+      flat layered depth.
+    patterned_frame: A coherent contour plus one inset dotted or patterned line, not
+      an untreated rectangle.
+    quiet_sides_decorative_bottom: Simple side rhythm with a stronger large-scale
+      bottom contour.
+pattern_pairing:
+  rule: Use one main outline language and at most one supporting pattern language
+    such as dots or a short zigzag strip. Do not stack perforations, dots and hatching
+    together.
+  optional_cutouts: true
+  separator: A single narrow zigzag/ribbon motif at the upper/lower color boundary
+    can carry the festive character.
+  frame: An inset frame is optional and should have matching edge or pattern treatment.
+variants: Different styles can change contour, separator/pattern placement, color
+  partition and top composition. Do not merely recolor one template.
+forbidden:
+- mandatory_dense_internal_perforations
+- tiny_unreadable_motif_detail
+- unrelated_pattern_collage
+- decoration_inside_text_safe_zone
+- decoration_in_cta_exclusion_zone
+- discontinuous_corner_join
+- repeat_count_outside_confirmed_range
+inspiration:
+- 'User reference artwork: assets/design-reference.png (visual direction only; does
+  not authorize changing CTA rules, palette or fixed geometry).'
+- https://www.horniman.ac.uk/story/papel-picado-mexicos-festive-paper-art/
+repeat_counts:
+  unit: One complete repeated outer-contour motif on a straight edge, not each subshape,
+    dot or interior mark.
+  left:
+    min: 7
+    max: 9
+  right:
+    min: 7
+    max: 9
+  bottom:
+    min: 5
+    max: 7
+  general_per_edge_bounds:
+    min: 5
+    max: 10
+  priority: Specific side/bottom ranges above govern normal output. General bounds
+    are not permission to use 5 on a long side or 10 on the bottom.
+  corners: Separate transition/termination units, excluded from straight-edge repeat
+    counts.
+  planning: Reserve corner arcs first, then divide each usable straight edge evenly
+    into N full motifs. No leftover half-unit at endpoints; left/right should have
+    matching rhythm.
+corner_continuity:
+  required: true
+  direction: Let the left/right/bottom border turn naturally around the corners. Maintain
+    connected silhouette, consistent phase and deliberate contour transitions.
+  construction: Use one closed outline, or boolean-union pieces before rendering.
+    Clip upper/lower color fields to the same silhouette; avoid independent rectangles
+    whose seams interrupt lobes.
+  forbidden:
+  - displaced_edge_endpoints
+  - unmatched_half_motifs
+  - accidental_sharp_spurs
+  - gaps_or_overlapping_lumps_at_corner_joins
+  - color_split_breaking_outer_contour
+  verification: Inspect the whole silhouette at native size, then both bottom corners
+    and top side terminations at 4x. For curves, inspect tangent continuity; for angular
+    motifs, use intentional aligned turns. Inspect repeat counts on each edge separately.

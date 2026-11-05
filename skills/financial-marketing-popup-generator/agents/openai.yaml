@@ -1,0 +1,3 @@
+interface:
+  display_name: "首页弹窗设计规则"
+  short_description: "基于固定布局、品牌配色和独立 CTA 规则生成与检查主题营销弹窗"

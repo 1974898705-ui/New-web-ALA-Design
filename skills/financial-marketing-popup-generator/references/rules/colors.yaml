@@ -1,0 +1,70 @@
+---
+schema_version: '1.0'
+rule_set: colors
+color_space: sRGB
+fixed:
+  cta_fill:
+    value: "#1A55FF"
+    locked: true
+  cta_text:
+    value: "#FFFFFF"
+    locked: true
+core_palette:
+  orange: "#FFA423"
+  pink: "#FF5290"
+  blue: "#008CFF"
+auxiliary_policy:
+  allowed: true
+  rule: Auxiliary colors must be visually adjacent tints, shades, or close hues of
+    the three core colors. They may support contrast or theme readability but may
+    not create a separate unrelated palette.
+  preferred_families:
+  - warm_yellow
+  - coral
+  - peach
+  - rose
+  - magenta
+  - cyan
+  - sky_blue
+  - deep_blue_shade
+  neutral_support:
+    allowed:
+    - "#FFFFFF"
+    - "#F7F9FF"
+    - "#16325C"
+    use: text, clean offer panel, or limited contrast support only
+composition:
+  chromatic_color_count:
+    preferred_max: 3
+    hard_max: 4
+    counting: Count base chromatic palette colors including CTA; local lighting/shading
+      is not permitted. Use a coherent limited flat palette.
+  rules:
+  - Use a coherent palette and readable broad color regions; two regions may have
+    comparable visual area.
+  - Theme recognition comes primarily from symbols, not from importing a new theme
+    palette.
+  - CTA blue is fixed and does not change with the theme.
+contrast:
+  text_must_remain_readable: true
+  offer_must_have_highest_information_contrast: true
+  theme_graphics_may_not_reduce_text_contrast: true
+forbidden:
+- change_cta_blue
+- rainbow_palette
+- unrelated_theme_palette
+- more_than_four_chromatic_colors
+- low_contrast_offer
+- gradient_anywhere
+color_partition:
+  default: Two broad upper/lower color regions sharing one card silhouette; three
+    or more are optional, never mandatory.
+  boundary: Use a clean meeting edge or one narrow, theme-compatible zigzag/ribbon/pattern
+    separator outside text safe zones.
+  containers: Text slots are invisible layout guides, not visible boxes. Do not wrap
+    each slot in an inset rectangle by default.
+  optional_frame: A frame is allowed when its contour, border pattern and theme form
+    a coherent treatment. White fields are allowed in such designed frames; no default
+    white offer rectangle.
+  composition: Preserve broad continuous color areas. Do not add a third block, exposed
+    frame or tiny accents merely to satisfy a count.

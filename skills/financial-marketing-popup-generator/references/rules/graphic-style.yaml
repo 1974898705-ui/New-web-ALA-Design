@@ -1,0 +1,81 @@
+---
+schema_version: '1.0'
+rule_set: graphic_style
+creative_direction:
+  keywords:
+  - flat_vector_festive_illustration
+  - clear_information
+  - coherent_color_partition
+  - controlled_border_rhythm
+  - financially_stable
+  tone_balance:
+    financial_stability: 0.65
+    playful_theme: 0.35
+rendering:
+  dimensionality: 2D flat vector-style illustration throughout
+  solid_color: true
+  large_clean_shapes: true
+  silhouette_priority: high
+  internal_detail: Richness through layered flat color shapes, internal patterns,
+    supporting objects and overlap; no simulated material or lighting.
+  outline_preferred: false
+  texture_allowed: false
+  gradient_allowed: false
+  realistic_shadow_allowed: false
+  glossy_allowed: false
+  glass_allowed: false
+  metallic_allowed: false
+  clay_allowed: false
+  three_dimensional_allowed: false
+  photorealistic_allowed: false
+  realistic_lighting_allowed: false
+financial_tone:
+  required:
+  - strong_alignment
+  - centered_axis
+  - stable_grid
+  - clear_spacing
+  - generous_negative_space
+  - clean_offer_area
+  rules:
+  - The popup must feel trustworthy before it feels festive.
+  - Use direct broad color partitions, continuous ordered borders and a compact flat-vector
+    festive cluster.
+  - The information structure must stay calm and easy to scan.
+micro_decoration:
+  enabled: true
+  role: atmosphere_only
+  total_count:
+    min: 0
+    max: 4
+  allowed_zones:
+  - inside_top_visual_50_percent_boundary
+  - outer_card_corner_outside_content_boxes
+  - outer_card_edge_outside_content_boxes
+  forbidden_zones:
+  - title
+  - offer_core
+  - cta
+  - card_to_cta_gap
+  - cta_exclusion_zone
+  rules:
+  - Micro decoration must not form a second visual cluster.
+  - Do not add decoration merely to fill empty space.
+  - All top-area micro decoration counts toward the 50% top-visual bounding box.
+  - Repeated dots, border cuts and integrated illustration details are not standalone
+    micro decorations; evaluate their visual density separately.
+forbidden:
+- photorealism
+- clay_rendered_scene
+- glassmorphism
+- metallic_material_render
+- realistic_cast_shadow
+- realistic_lighting_scene
+- dense_texture
+- complex_scene
+- illegible_fragmented_small_detail
+- gradient_anywhere
+- gloss_highlight
+- volumetric_shading
+- material_rendered_ribbon
+- 3D_illustration

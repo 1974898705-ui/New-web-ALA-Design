@@ -1,0 +1,131 @@
+---
+schema_version: '1.0'
+rule_set: layout
+unit: px
+coordinate_origin: top_left
+canvas:
+  x: 0
+  y: 0
+  width: 279
+  height: 400
+  background: transparent
+  locked: true
+center_axis:
+  x: 139.5
+  locked: true
+layers_back_to_front:
+- id: top_visual
+  z_index: 10
+- id: card
+  z_index: 20
+- id: card_content
+  z_index: 30
+- id: cta
+  z_index: 40
+components:
+  card:
+    bounding_box:
+      x: 30
+      y: 65
+      width: 219
+      height: 240
+    center_x: 139.5
+    visual_skeleton: stable_vertical_rectangle
+    locked:
+      x: true
+      y: true
+      width: true
+      height: true
+      center_axis: true
+    invariants:
+    - Theme changes may alter the edge silhouette but not the logical box.
+    - Edge decoration may not move or compress content boxes.
+  title:
+    bounding_box:
+      x: 45
+      y: 87
+      width: 189
+      height: 45
+    alignment:
+      horizontal: center
+      vertical: center
+    max_lines: 2
+    decoration_allowed: false
+    locked: true
+  offer_panel:
+    bounding_box:
+      x: 40
+      y: 158
+      width: 199
+      height: 115
+    alignment:
+      horizontal: center
+    decoration_inside_safe_zone_allowed: false
+    safe_zone_reference: components.offer_text.bounding_box
+    locked: true
+    rule: Legacy layout reference for offer content, not a mandatory drawn container.
+      A broad lower card region can extend to card sides and bottom.
+  title_panel:
+    bounding_box:
+      x: 40
+      y: 82
+      width: 199
+      height: 55
+    independent_color_block_required: false
+    text_safe_zone:
+      x: 45
+      y: 87
+      width: 189
+      height: 45
+    rule: Optional decorated title backing footprint only; no visible panel required.
+      Title text safe zone stays locked.
+  offer_text:
+    bounding_box:
+      x: 45
+      y: 163
+      width: 189
+      height: 105
+    locked: true
+    rule: All benefit, primary value, percentage, suffix and supporting text stays
+      inside this inset box.
+  cta:
+    bounding_box:
+      x: 21
+      y: 326
+      width: 237
+      height: 44
+    locked: true
+spacing:
+  card_bottom_y: 305
+  cta_top_y: 326
+  card_to_cta_gap: 21
+  card_to_cta_gap_allowed_content: false
+content_hierarchy:
+  order:
+  - offer
+  - title
+  - cta
+  - top_visual
+  - edge_treatment
+  - micro_decoration
+  requirements:
+  - The offer must remain the largest and strongest information element.
+  - Title and offer text safe zones must stay free of decorative motifs and cutouts;
+    solid color backings are required.
+  - All text must remain inside its inset text safe zone; panel color backings use
+    their own fixed boxes.
+forbidden:
+- move_or_resize_card
+- move_or_resize_title
+- move_or_resize_offer_panel
+- move_or_resize_cta
+- theme_driven_layout_change
+- decoration_inside_title_text_safe_zone
+- decoration_inside_offer_text_safe_zone
+color_partition:
+  geometry: Upper and lower fields extend to the shared card silhouette; do not clip
+    them to text boxes.
+  split_y: Choose between title safe-zone bottom y=132 and offer text top y=163; divider
+    must stay outside both text safe zones.
+  legacy_panel_boxes: Title/offer panel rectangles define optional backing footprints,
+    not required visible outlines or limits on broad color fills.

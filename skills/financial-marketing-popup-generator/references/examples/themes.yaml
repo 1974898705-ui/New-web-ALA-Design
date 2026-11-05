@@ -1,0 +1,127 @@
+---
+schema_version: '1.0'
+example_set: themes
+note: These are variable theme profiles. They may not override any locked geometry,
+  typography, CTA, top-visual width, layer, or validation rule.
+themes:
+  christmas:
+    display_name: 圣诞
+    top_visual:
+      primary_symbol: detailed gift arrangement with bow
+      supporting_symbols:
+      - small bell
+      - pine sprig
+      micro_symbols:
+      - tiny spark
+      width_ratio: 0.5
+      layer: behind_card
+      alignment: center
+      rendering: Flat vector solid-color illustration, patterned gift wrapping and
+        bow, small supporting bell and pine sprig, layered occlusion. No gloss, shading
+        or material rendering.
+    edge_profile:
+      outer_card: rounded_scallop
+      offer_panel: none_by_default
+      repeat_counts:
+        left: 8
+        right: 8
+        bottom: 6
+        corners: separate, naturally connected, not counted
+    palette:
+      dominant: "#FF5290"
+      secondary: "#FFA423"
+      accent: "#BFE8FF"
+      optional_adjacent: []
+    atmosphere:
+      density: low
+      allowed_locations:
+      - top_visual
+      - outer_card_corner
+    forbidden_theme_shortcuts:
+    - full Christmas scene
+    - large character group
+    - unapproved red-green palette replacement
+    color_partition:
+      mode: upper_lower_shared_silhouette
+      upper: "#FF5290"
+      lower: "#FFA423"
+      separator: optional single sparse zigzag or theme ribbon
+  halloween:
+    display_name: 万圣节
+    top_visual:
+      primary_symbol: simplified pumpkin
+      supporting_symbols:
+      - one small bat
+      - small crescent
+      micro_symbols:
+      - tiny star
+      width_ratio: 0.5
+      layer: behind_card
+      alignment: center
+    edge_profile:
+      outer_card: stepped_diamond
+      offer_panel: none_by_default
+      repeat_counts:
+        left: 8
+        right: 8
+        bottom: 6
+        corners: separate, naturally connected, not counted
+    palette:
+      dominant: "#FFA423"
+      secondary: "#008CFF"
+      accent: "#FF5290"
+      optional_adjacent: []
+    atmosphere:
+      density: low
+      allowed_locations:
+      - top_visual
+      - outer_card_edge
+    forbidden_theme_shortcuts:
+    - dark full-scene background
+    - horror realism
+    - large haunted-house landscape
+    color_partition:
+      mode: upper_lower_shared_silhouette
+      upper: "#FFA423"
+      lower: "#008CFF"
+      separator: optional single sparse zigzag or theme ribbon
+  ecommerce_sale:
+    display_name: 电商大促
+    top_visual:
+      primary_symbol: simplified shopping bag with sale tag
+      supporting_symbols:
+      - small coupon
+      - small parcel
+      micro_symbols:
+      - tiny confetti dot
+      - tiny spark
+      width_ratio: 0.5
+      layer: behind_card
+      alignment: center
+    edge_profile:
+      outer_card: rounded_scallop
+      offer_panel: none_by_default
+      repeat_counts:
+        left: 8
+        right: 8
+        bottom: 6
+        corners: separate, naturally connected, not counted
+    palette:
+      dominant: "#008CFF"
+      secondary: "#FF5290"
+      accent: "#FFA423"
+      optional_adjacent: []
+    atmosphere:
+      density: low
+      allowed_locations:
+      - top_visual
+      - outer_card_corner
+    forbidden_theme_shortcuts:
+    - full shopping scene
+    - dense confetti
+    - price tags near CTA
+    color_partition:
+      mode: upper_lower_shared_silhouette
+      upper: "#008CFF"
+      lower: "#FF5290"
+      separator: optional single sparse zigzag or theme ribbon

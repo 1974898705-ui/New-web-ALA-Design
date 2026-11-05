@@ -1,0 +1,7 @@
+interface:
+  display_name: "文本识别系统"
+  short_description: "识别文字或需求截图并填充二级设计页面字段"
+  default_prompt: "使用 $text-recognition-system 识别这段营销需求或需求截图，并输出可填入设计页面的结构化字段。"
+
+policy:
+  allow_implicit_invocation: true
