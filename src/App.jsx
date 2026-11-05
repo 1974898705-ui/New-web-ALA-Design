@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPopupSpec, popupSkillRuntime, validatePopupSpec } from './popupSkill.js'
-import { generatePopupVisual } from './imageProvider.js'
+import { generatePopupArtwork } from './imageProvider.js'
 import { extractDesignBrief } from '../skills/text-recognition-system/scripts/extract-text.mjs'
 
 const ASSET_ROOT = `${import.meta.env.BASE_URL}assets`
@@ -331,6 +331,29 @@ function ThemeVisual({ spec, generatedImage, clipId }) {
 function PopupArtwork({ result }) {
   const { spec } = result
   const { canvas, card, titleBox, offerBox, cta, palette, edges, centerX, typography } = spec
+
+  if (result.generatedArtwork) {
+    return (
+      <svg
+        className="popup-artwork"
+        viewBox={`${canvas.x} ${canvas.y} ${canvas.width} ${canvas.height}`}
+        role="img"
+        aria-label={`Cloudflare 完整生成素材 ${result.variant + 1}`}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect width={canvas.width} height={canvas.height} fill="#F7F9FF" />
+        <image
+          href={result.generatedArtwork}
+          x={canvas.x}
+          y={canvas.y}
+          width={canvas.width}
+          height={canvas.height}
+          preserveAspectRatio="xMidYMid slice"
+        />
+      </svg>
+    )
+  }
+
   const titleLines = splitTitle(result.form.title)
   const offer = parseOffer(result.form.benefitOne)
   const secondaryOffer = cleanDraftCopy(result.form.benefitTwo, '')
@@ -388,11 +411,7 @@ function PopupArtwork({ result }) {
         </clipPath>
       </defs>
 
-      <ThemeVisual
-        spec={spec}
-        generatedImage={result.generatedImage}
-        clipId={`generated-top-${result.id}`}
-      />
+      <ThemeVisual spec={spec} generatedImage={null} clipId={`local-top-${result.id}`} />
 
       <g data-layer="card" clipPath="url(#card-silhouette)" aria-label="营销卡片">
         <rect x={card.x} y={card.y} width={card.width} height={splitY - card.y} fill={palette.upper} />
@@ -679,7 +698,7 @@ function App() {
   async function generateMockups(event) {
     event.preventDefault()
     setIsGenerating(true)
-    setGenerationNote('正在尝试 Cloudflare 免费生图…')
+    setGenerationNote('正在调用 Cloudflare 生成完整弹窗…')
     setResults([])
     setPage(1)
 
@@ -700,14 +719,16 @@ function App() {
 
       for (let index = 0; index < count; index += 1) {
         const spec = createPopupSpec(snapshot, index)
-        let generatedImage = null
+        let generatedArtwork = null
+        let providerModel = null
         let provider = 'local-fallback'
         let providerError = null
 
         if (providerAvailable) {
           try {
-            const generated = await generatePopupVisual(snapshot, spec, index)
-            generatedImage = generated.image
+            const generated = await generatePopupArtwork(snapshot, spec, index)
+            generatedArtwork = generated.image
+            providerModel = generated.model
             provider = 'cloudflare'
           } catch (error) {
             providerAvailable = false
@@ -720,17 +741,21 @@ function App() {
           variant: index,
           form: snapshot,
           spec,
-          generatedImage,
+          generatedArtwork,
+          providerModel,
           provider,
           providerError,
-          validation: validatePopupSpec(spec, { fontReady, generatedVisual: Boolean(generatedImage) }),
+          validation: validatePopupSpec(spec, {
+            fontReady,
+            fullGeneratedArtwork: Boolean(generatedArtwork),
+          }),
         })
       }
 
       const generatedCount = nextResults.filter((result) => result.provider === 'cloudflare').length
       setGenerationNote(
         generatedCount > 0
-          ? `Cloudflare FLUX 已生成 ${generatedCount} 张主题视觉`
+          ? `Cloudflare FLUX.2 已生成 ${generatedCount} 张完整弹窗`
           : 'Cloudflare 尚未配置，已使用本地测试素材',
       )
       setResults(nextResults)
@@ -860,7 +885,7 @@ function App() {
         <section className="preview-area" aria-label="设计预览">
           <div className="preview-card">
             <span className="demo-badge">
-              {currentResult?.provider === 'cloudflare' ? 'CLOUDFLARE AI' : 'TEST MODE'}
+              {currentResult?.provider === 'cloudflare' ? 'CLOUDFLARE FULL AI' : 'TEST MODE'}
             </span>
             <span
               className={`skill-badge ${currentResult?.validation.status ?? 'ready'}`}
@@ -887,7 +912,7 @@ function App() {
               {isGenerating ? (
                 <div className="generation-state">
                   <span className="loading-spinner" />
-                  <strong>正在生成主题视觉</strong>
+                  <strong>正在生成完整弹窗</strong>
                   <span>{generationNote}</span>
                 </div>
               ) : currentResult ? (
@@ -896,7 +921,9 @@ function App() {
                   <div className="preview-meta">
                     <span>
                       {currentResult.spec.theme.name} · {quality} quality · {
-                        currentResult.provider === 'cloudflare' ? 'Cloudflare FLUX' : '本地测试'
+                        currentResult.provider === 'cloudflare'
+                          ? `Cloudflare ${currentResult.providerModel ?? 'FLUX.2'} · 全图生成`
+                          : '本地测试'
                       }
                     </span>
                     <span>

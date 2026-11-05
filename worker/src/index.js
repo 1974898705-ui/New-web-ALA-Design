@@ -1,6 +1,8 @@
-const IMAGE_MODEL = '@cf/black-forest-labs/flux-1-schnell'
+const IMAGE_MODEL = '@cf/black-forest-labs/flux-2-klein-4b'
 const PRODUCTION_ORIGIN = 'https://1974898705-ui.github.io'
 const MAX_BODY_BYTES = 64 * 1024
+const OUTPUT_WIDTH = 704
+const OUTPUT_HEIGHT = 1024
 
 function isAllowedOrigin(origin) {
   if (origin === PRODUCTION_ORIGIN) return true
@@ -79,11 +81,22 @@ export default {
         return json({ error: '缺少图片生成提示词。' }, 400, origin)
       }
 
-      const steps = Math.min(8, Math.max(1, Number(body.steps) || 4))
+      const form = new FormData()
+      form.append('prompt', prompt.slice(0, 2048))
+      form.append('width', String(OUTPUT_WIDTH))
+      form.append('height', String(OUTPUT_HEIGHT))
+      const formResponse = new Response(form)
+      const contentType = formResponse.headers.get('content-type')
+
+      if (!formResponse.body || !contentType) {
+        throw new Error('无法创建 Cloudflare 图片生成请求。')
+      }
 
       const result = await env.AI.run(IMAGE_MODEL, {
-        prompt: prompt.slice(0, 2048),
-        steps,
+        multipart: {
+          body: formResponse.body,
+          contentType,
+        },
       })
 
       if (!result?.image) {
@@ -94,6 +107,9 @@ export default {
         image: `data:image/jpeg;base64,${result.image}`,
         provider: 'cloudflare-workers-ai',
         model: IMAGE_MODEL,
+        mode: 'full-artwork',
+        width: OUTPUT_WIDTH,
+        height: OUTPUT_HEIGHT,
       }, 200, origin)
     } catch (error) {
       console.error('Image generation failed', error)

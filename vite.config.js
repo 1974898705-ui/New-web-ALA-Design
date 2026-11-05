@@ -1,6 +1,8 @@
 import { defineConfig, loadEnv } from 'vite'
 
-const CLOUDFLARE_IMAGE_MODEL = '@cf/black-forest-labs/flux-1-schnell'
+const CLOUDFLARE_IMAGE_MODEL = '@cf/black-forest-labs/flux-2-klein-4b'
+const OUTPUT_WIDTH = 704
+const OUTPUT_HEIGHT = 1024
 
 function jsonResponse(response, status, payload) {
   response.statusCode = status
@@ -55,19 +57,19 @@ function cloudflareImageProxy({ accountId, apiToken }) {
             return
           }
 
+          const multipartBody = new FormData()
+          multipartBody.append('prompt', prompt.slice(0, 2048))
+          multipartBody.append('width', String(OUTPUT_WIDTH))
+          multipartBody.append('height', String(OUTPUT_HEIGHT))
+
           const cloudflareResponse = await fetch(
             `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(accountId)}/ai/run/${CLOUDFLARE_IMAGE_MODEL}`,
             {
               method: 'POST',
               headers: {
                 Authorization: `Bearer ${apiToken}`,
-                'Content-Type': 'application/json',
               },
-              body: JSON.stringify({
-                prompt: prompt.slice(0, 2048),
-                steps: Math.min(8, Math.max(1, Number(body.steps) || 4)),
-                seed: Number.isInteger(body.seed) ? body.seed : Math.floor(Math.random() * 2_147_483_647),
-              }),
+              body: multipartBody,
             },
           )
 
@@ -99,6 +101,9 @@ function cloudflareImageProxy({ accountId, apiToken }) {
             image: dataUri,
             provider: 'cloudflare-workers-ai',
             model: CLOUDFLARE_IMAGE_MODEL,
+            mode: 'full-artwork',
+            width: OUTPUT_WIDTH,
+            height: OUTPUT_HEIGHT,
           })
         } catch (error) {
           jsonResponse(response, 500, {

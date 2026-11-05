@@ -32,8 +32,8 @@ jobs:
             -H 'Origin: https://1974898705-ui.github.io' \
             -H 'Content-Type: application/json' \
             -H 'X-ALA-Client: ala-design-web' \
-            --data '{"prompt":"A compact flat festive gift ornament, no text, transparent-looking simple composition","steps":1,"seed":20261105}' \
+            --data '{"mode":"full-artwork","prompt":"Generate a complete portrait financial marketing popup: festive ornament, scalloped card, title, one 60% off offer and a separate blue CTA. Flat vector style, no gradients."}' \
             "$WORKER_URL" \
             --output "$response_file" \
             --write-out '%{http_code}')"
-          node -e "const fs=require('node:fs');const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));const status=Number(process.argv[2]);if(status>=400||!p.image?.startsWith('data:image/jpeg;base64,')||p.image.length<1000){console.error(JSON.stringify({status,error:p.error,code:p.code}));process.exit(1)}console.log(JSON.stringify({ok:true,provider:p.provider,model:p.model,imageCharacters:p.image.length}))" "$response_file" "$status_code"
+          node -e "const fs=require('node:fs');const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));const status=Number(process.argv[2]);if(status>=400||!p.image?.startsWith('data:image/jpeg;base64,')||p.image.length<1000||p.mode!=='full-artwork'||p.width!==704||p.height!==1024){console.error(JSON.stringify({status,error:p.error,code:p.code,mode:p.mode,width:p.width,height:p.height}));process.exit(1)}console.log(JSON.stringify({ok:true,provider:p.provider,model:p.model,mode:p.mode,width:p.width,height:p.height,imageCharacters:p.image.length}))" "$response_file" "$status_code"

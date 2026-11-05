@@ -181,7 +181,10 @@ export function createPopupSpec(form, variant = 0) {
   }
 }
 
-export function validatePopupSpec(spec, { fontReady = false, generatedVisual = false } = {}) {
+export function validatePopupSpec(
+  spec,
+  { fontReady = false, generatedVisual = false, fullGeneratedArtwork = false } = {},
+) {
   const skill = popupSkillRuntime
 
   if (!spec.governedBySkill) {
@@ -200,6 +203,19 @@ export function validatePopupSpec(spec, { fontReady = false, generatedVisual = f
       issues: [{
         code: 'SKILL_SCOPE_MISMATCH',
         message: `当前技能包${scopeIssues.join('，')}；本次结果为未套用规范的测试稿`,
+      }],
+      checkedRuleCount: 0,
+      skillVersion: skill.version,
+    }
+  }
+
+  if (fullGeneratedArtwork) {
+    return {
+      passed: false,
+      status: 'draft',
+      issues: [{
+        code: 'FULL_ARTWORK_UNVERIFIED',
+        message: '整张弹窗由 Cloudflare 生成，已注入技能规范，但像素结果仍需人工确认文字、坐标、字体、纯色与花边数量',
       }],
       checkedRuleCount: 0,
       skillVersion: skill.version,
