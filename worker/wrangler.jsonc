@@ -1,2 +1,14 @@
-m«ëˆ§½©buªàºg§·
-+‘êÿÂ¶§‚W«Ê'qKæÚ±î¸Ø[é¢Šwâ•ê(º×â•æÛ­æ¤n·š‘éÜ¡×²Úâ§¶‰î™ÈZ­§-z¹bëu×œ¡×yÊzÈ§¦ëa…éiv+)•¬­†+&zËè¢›­Šznµø¥y×Ÿjém~ŠìµØ§¢‹­¦ëhºÚnµø¥y×Ÿjém~ŠìµÚ.
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "ala-design-image-api",
+  "account_id": "91551c29b88b49c9e4e75446efcfd9c3",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-05",
+  "workers_dev": true,
+  "ai": {
+    "binding": "AI"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

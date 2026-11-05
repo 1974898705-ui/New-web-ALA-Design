@@ -1,1 +1,38 @@
-m«ëˆ§½©buªàºg§¶­†æÿÂŠä~Z0³ûŞ®'òÂŠäz¼¦•KæÚ±î¸Ø[é¢Šwâ•ê(º×â•æÛ­æ¤n·š‘éÜ¡×²Úâ§¶‰î™ÈZ­§-z¹bëu×œ¡×yÊzÈ§¦ëa…éiv+)•¬­†+&zËè¢›­Šznµø¥y×Ÿjém~ŠìµØ§¢‹­¦ëhºÚnµø¥y×Ÿjém~ŠìµÚ.
+name: Verify Cloudflare Worker image generation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - worker/**
+      - .github/workflows/verify-worker.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Worker health
+        run: |
+          curl --fail --silent --show-error \
+            --retry 6 --retry-all-errors --retry-delay 5 --max-time 20 \
+            https://ala-design-image-api.ai-creative-platform.workers.dev/health
+
+      - name: Generate and validate one real image
+        env:
+          WORKER_URL: https://ala-design-image-api.ai-creative-platform.workers.dev/api/generate-image
+        run: |
+          response_file="${RUNNER_TEMP}/worker-response.json"
+          curl --fail --silent --show-error \
+            --retry 3 --retry-all-errors --retry-delay 5 --max-time 120 \
+            -H 'Origin: https://1974898705-ui.github.io' \
+            -H 'Content-Type: application/json' \
+            -H 'X-ALA-Client: ala-design-web' \
+            --data '{"prompt":"A compact flat festive gift ornament, no text, transparent-looking simple composition","steps":1,"seed":20261105}' \
+            "$WORKER_URL" \
+            --output "$response_file"
+          node -e "const fs=require('node:fs');const p=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));if(!p.image?.startsWith('data:image/jpeg;base64,')||p.image.length<1000)process.exit(1);console.log(JSON.stringify({ok:true,provider:p.provider,model:p.model,imageCharacters:p.image.length}))" "$response_file"
