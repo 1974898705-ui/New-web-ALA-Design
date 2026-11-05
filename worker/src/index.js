@@ -80,14 +80,10 @@ export default {
       }
 
       const steps = Math.min(8, Math.max(1, Number(body.steps) || 4))
-      const seed = Number.isInteger(body.seed)
-        ? Math.abs(body.seed) % 2_147_483_647
-        : Math.floor(Math.random() * 2_147_483_647)
 
       const result = await env.AI.run(IMAGE_MODEL, {
         prompt: prompt.slice(0, 2048),
         steps,
-        seed,
       })
 
       if (!result?.image) {
