@@ -107,12 +107,16 @@ export default {
         image: `data:image/jpeg;base64,${result.image}`,
         provider: 'cloudflare-workers-ai',
         model: IMAGE_MODEL,
-        mode: 'full-artwork',
+        mode: 'visual-base',
         width: OUTPUT_WIDTH,
         height: OUTPUT_HEIGHT,
       }, 200, origin)
     } catch (error) {
-      console.error('Image generation failed', error)
+      console.error(JSON.stringify({
+        message: 'Image generation failed',
+        path: url.pathname,
+        error: error instanceof Error ? error.message : String(error),
+      }))
       return json({
         code: 'IMAGE_PROVIDER_ERROR',
         error: error instanceof Error ? error.message : '图片生成失败。',

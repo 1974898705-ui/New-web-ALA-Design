@@ -331,29 +331,6 @@ function ThemeVisual({ spec, generatedImage, clipId }) {
 function PopupArtwork({ result }) {
   const { spec } = result
   const { canvas, card, titleBox, offerBox, cta, palette, edges, centerX, typography } = spec
-
-  if (result.generatedArtwork) {
-    return (
-      <svg
-        className="popup-artwork"
-        viewBox={`${canvas.x} ${canvas.y} ${canvas.width} ${canvas.height}`}
-        role="img"
-        aria-label={`Cloudflare 完整生成素材 ${result.variant + 1}`}
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect width={canvas.width} height={canvas.height} fill="#F7F9FF" />
-        <image
-          href={result.generatedArtwork}
-          x={canvas.x}
-          y={canvas.y}
-          width={canvas.width}
-          height={canvas.height}
-          preserveAspectRatio="xMidYMid slice"
-        />
-      </svg>
-    )
-  }
-
   const titleLines = splitTitle(result.form.title)
   const offer = parseOffer(result.form.benefitOne)
   const secondaryOffer = cleanDraftCopy(result.form.benefitTwo, '')
@@ -376,6 +353,105 @@ function PopupArtwork({ result }) {
   const benefitWeight = typography.benefit_description.weight
   const primaryWeight = typography.offer_primary_value.weight
   const suffixWeight = typography.offer_suffix.weight
+  const cardClipId = `card-silhouette-${result.id}`
+  const baseFilterId = `remove-key-background-${result.id}`
+
+  const copyLayers = (
+    <>
+      <g data-layer="card-content" aria-label="规范排版文案">
+        {!result.generatedArtwork && (
+          <polyline points={separatorPoints} fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinejoin="round" opacity="0.9" />
+        )}
+        <text x={centerX} y={titleY} fill={upperText} fontFamily="Roboto" fontSize="18" fontWeight={titleWeight} textAnchor="middle">
+          {titleLines.map((line, index) => (
+            <tspan key={`${line}-${index}`} x={centerX} dy={index === 0 ? 0 : 20}>
+              {line}
+            </tspan>
+          ))}
+        </text>
+        {titleLines.length === 1 && cleanDraftCopy(result.form.subtitle, '') && (
+          <text x={centerX} y={titleBox.y + 36} fill={upperText} fontFamily="Roboto" fontSize="9" fontWeight={suffixWeight} textAnchor="middle">
+            {cleanDraftCopy(result.form.subtitle, '').slice(0, 38)}
+          </text>
+        )}
+        <g fill={lowerText} fontFamily="Roboto" textAnchor="middle">
+          <text x={centerX} y={offerBox.y + 13} fontSize="10" fontWeight={benefitWeight}>
+            {cleanDraftCopy(result.form.copyOne, 'Max. descuento en intereses').slice(0, 34)}
+          </text>
+          <text x={centerX} y={mainOfferY} fontWeight={primaryWeight}>
+            {offer.prefix && <tspan fontSize="22">{offer.prefix}</tspan>}
+            <tspan fontSize={offer.value.length > 5 ? '40' : hasSecondOffer ? '48' : '60'}>{offer.value}</tspan>
+            {offer.symbol && <tspan fontSize={hasSecondOffer ? '28' : '34'}>{offer.symbol}</tspan>}
+          </text>
+          {offer.suffix && (
+            <text x={centerX + 50} y={mainOfferY + 16} fontSize="17" fontWeight={suffixWeight}>
+              {offer.suffix.slice(0, 8)}
+            </text>
+          )}
+          {hasSecondOffer && (
+            <>
+              <text x={centerX} y={offerBox.y + 82} fontSize="9" fontWeight={benefitWeight}>
+                {cleanDraftCopy(result.form.copyTwo, '').slice(0, 34)}
+              </text>
+              <text x={centerX} y={offerBox.y + 102} fontSize="17" fontWeight={primaryWeight}>
+                {secondaryOffer.slice(0, 16)}
+              </text>
+            </>
+          )}
+        </g>
+      </g>
+
+      <g data-layer="cta" aria-label="规范 CTA">
+        <rect x={cta.x} y={cta.y} width={cta.width} height={cta.height} rx={cta.radius} fill={cta.fill} />
+        <text
+          x={centerX}
+          y={cta.y + cta.height / 2 + 6}
+          fill={cta.text}
+          fontFamily="Roboto"
+          fontSize="16"
+          fontWeight={typography.cta.weight}
+          textAnchor="middle"
+        >
+          {cleanDraftCopy(result.form.buttonCopy, '¡Tómalo ya!').slice(0, 24)}
+        </text>
+      </g>
+    </>
+  )
+
+  if (result.generatedArtwork) {
+    return (
+      <svg
+        className="popup-artwork"
+        viewBox={`${canvas.x} ${canvas.y} ${canvas.width} ${canvas.height}`}
+        role="img"
+        aria-label={`Cloudflare 视觉底图与规范排版素材 ${result.variant + 1}`}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <filter id={baseFilterId} x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
+            <feColorMatrix
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  -1 -1 -1 0 3"
+            />
+          </filter>
+          <clipPath id={`${cardClipId}-generated`}>
+            <rect x="18" y="8" width="243" height="298" rx="14" />
+          </clipPath>
+        </defs>
+        <image
+          href={result.generatedArtwork}
+          x={canvas.x}
+          y={canvas.y}
+          width={canvas.width}
+          height={canvas.height}
+          preserveAspectRatio="xMidYMid slice"
+          clipPath={`url(#${cardClipId}-generated)`}
+          filter={`url(#${baseFilterId})`}
+        />
+        {copyLayers}
+      </svg>
+    )
+  }
 
   return (
     <svg
@@ -386,7 +462,7 @@ function PopupArtwork({ result }) {
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <clipPath id="card-silhouette">
+        <clipPath id={cardClipId}>
           <rect x={leftEdgeX} y={card.y} width={card.width - edgeRadius * 2} height={card.height - edgeRadius} rx="8" />
           <rect x={card.x} y={card.y} width={card.width} height="20" rx="10" />
           {spec.theme.edgeProfile === 'stepped_diamond' ? (
@@ -413,66 +489,12 @@ function PopupArtwork({ result }) {
 
       <ThemeVisual spec={spec} generatedImage={null} clipId={`local-top-${result.id}`} />
 
-      <g data-layer="card" clipPath="url(#card-silhouette)" aria-label="营销卡片">
+      <g data-layer="card" clipPath={`url(#${cardClipId})`} aria-label="营销卡片">
         <rect x={card.x} y={card.y} width={card.width} height={splitY - card.y} fill={palette.upper} />
         <rect x={card.x} y={splitY} width={card.width} height={(card.y + card.height) - splitY} fill={palette.lower} />
       </g>
 
-      <g data-layer="card-content" aria-label="卡片文案">
-        <polyline points={separatorPoints} fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinejoin="round" opacity="0.9" />
-        <text x={centerX} y={titleY} fill={upperText} fontFamily="Roboto" fontSize="18" fontWeight={titleWeight} textAnchor="middle">
-          {titleLines.map((line, index) => (
-            <tspan key={line} x={centerX} dy={index === 0 ? 0 : 20}>
-              {line}
-            </tspan>
-          ))}
-        </text>
-        {titleLines.length === 1 && (
-          <text x={centerX} y={titleBox.y + 36} fill={upperText} fontFamily="Roboto" fontSize="9" fontWeight={suffixWeight} textAnchor="middle">
-            {cleanDraftCopy(result.form.subtitle, '').slice(0, 38)}
-          </text>
-        )}
-        <g fill={lowerText} fontFamily="Roboto" textAnchor="middle">
-        <text x={centerX} y={offerBox.y + 13} fontSize="10" fontWeight={benefitWeight}>
-          {cleanDraftCopy(result.form.copyOne, 'Max. descuento en intereses').slice(0, 34)}
-        </text>
-        <text x={centerX} y={mainOfferY} fontWeight={primaryWeight}>
-          {offer.prefix && <tspan fontSize="22">{offer.prefix}</tspan>}
-          <tspan fontSize={offer.value.length > 5 ? '40' : hasSecondOffer ? '48' : '60'}>{offer.value}</tspan>
-          {offer.symbol && <tspan fontSize={hasSecondOffer ? '28' : '34'}>{offer.symbol}</tspan>}
-        </text>
-        {offer.suffix && (
-          <text x={centerX + 50} y={mainOfferY + 16} fontSize="17" fontWeight={suffixWeight}>
-            {offer.suffix.slice(0, 8)}
-          </text>
-        )}
-        {hasSecondOffer && (
-          <>
-            <text x={centerX} y={offerBox.y + 82} fontSize="9" fontWeight={benefitWeight}>
-              {cleanDraftCopy(result.form.copyTwo, '').slice(0, 34)}
-            </text>
-            <text x={centerX} y={offerBox.y + 102} fontSize="17" fontWeight={primaryWeight}>
-              {secondaryOffer.slice(0, 16)}
-            </text>
-          </>
-        )}
-        </g>
-      </g>
-
-      <g data-layer="cta" aria-label="CTA">
-        <rect x={cta.x} y={cta.y} width={cta.width} height={cta.height} rx={cta.radius} fill={cta.fill} />
-        <text
-          x={centerX}
-          y={cta.y + cta.height / 2 + 6}
-          fill={cta.text}
-          fontFamily="Roboto"
-          fontSize="16"
-          fontWeight={typography.cta.weight}
-          textAnchor="middle"
-        >
-          {cleanDraftCopy(result.form.buttonCopy, '¡Tómalo ya!').slice(0, 24)}
-        </text>
-      </g>
+      {copyLayers}
     </svg>
   )
 }
@@ -698,7 +720,7 @@ function App() {
   async function generateMockups(event) {
     event.preventDefault()
     setIsGenerating(true)
-    setGenerationNote('正在调用 Cloudflare 生成完整弹窗…')
+    setGenerationNote('正在调用 Cloudflare 生成无文字视觉底图…')
     setResults([])
     setPage(1)
 
@@ -747,7 +769,7 @@ function App() {
           providerError,
           validation: validatePopupSpec(spec, {
             fontReady,
-            fullGeneratedArtwork: Boolean(generatedArtwork),
+            generatedVisual: Boolean(generatedArtwork),
           }),
         })
       }
@@ -755,7 +777,7 @@ function App() {
       const generatedCount = nextResults.filter((result) => result.provider === 'cloudflare').length
       setGenerationNote(
         generatedCount > 0
-          ? `Cloudflare FLUX.2 已生成 ${generatedCount} 张完整弹窗`
+          ? `Cloudflare FLUX.2 已生成 ${generatedCount} 张视觉底图，文案已按规范排版`
           : 'Cloudflare 尚未配置，已使用本地测试素材',
       )
       setResults(nextResults)
@@ -884,21 +906,23 @@ function App() {
 
         <section className="preview-area" aria-label="设计预览">
           <div className="preview-card">
-            <span className="demo-badge">
-              {currentResult?.provider === 'cloudflare' ? 'CLOUDFLARE FULL AI' : 'TEST MODE'}
-            </span>
-            <span
-              className={`skill-badge ${currentResult?.validation.status ?? 'ready'}`}
-              title={currentResult?.validation.issues.map((issue) => `${issue.code}: ${issue.message}`).join('\n') || '技能包已加载'}
-            >
-              SKILL v{popupSkillRuntime.version} · {
-                currentResult
-                  ? currentResult.validation.status === 'unscoped'
-                    ? 'N/A'
-                    : currentResult.validation.passed ? 'PASS' : 'DRAFT'
-                  : 'READY'
-              }
-            </span>
+            <div className="preview-badges" aria-label="生成与规范状态">
+              <span className="demo-badge">
+                {currentResult?.provider === 'cloudflare' ? 'CLOUDFLARE VISUAL' : 'TEST MODE'}
+              </span>
+              <span
+                className={`skill-badge ${currentResult?.validation.status ?? 'ready'}`}
+                title={currentResult?.validation.issues.map((issue) => `${issue.code}: ${issue.message}`).join('\n') || '技能包已加载'}
+              >
+                SKILL v{popupSkillRuntime.version} · {
+                  currentResult
+                    ? currentResult.validation.status === 'unscoped'
+                      ? 'N/A'
+                      : currentResult.validation.passed ? 'PASS' : 'DRAFT'
+                    : 'READY'
+                }
+              </span>
+            </div>
             <button
               className="download-button"
               type="button"
@@ -912,7 +936,7 @@ function App() {
               {isGenerating ? (
                 <div className="generation-state">
                   <span className="loading-spinner" />
-                  <strong>正在生成完整弹窗</strong>
+                  <strong>正在生成视觉底图</strong>
                   <span>{generationNote}</span>
                 </div>
               ) : currentResult ? (
@@ -922,7 +946,7 @@ function App() {
                     <span>
                       {currentResult.spec.theme.name} · {quality} quality · {
                         currentResult.provider === 'cloudflare'
-                          ? `Cloudflare ${currentResult.providerModel ?? 'FLUX.2'} · 全图生成`
+                          ? `Cloudflare ${currentResult.providerModel ?? 'FLUX.2'} · 视觉底图 + 规范排版`
                           : '本地测试'
                       }
                     </span>

@@ -741,10 +741,18 @@ button {
   background: #212121;
 }
 
-.demo-badge {
+.preview-badges {
   position: absolute;
   top: 25px;
   left: 24px;
+  display: flex;
+  max-width: calc(100% - 92px);
+  align-items: center;
+  gap: 8px;
+}
+
+.demo-badge {
+  flex: none;
   padding: 6px 9px;
   border: 1px solid #3a3a3a;
   border-radius: 999px;
@@ -757,9 +765,7 @@ button {
 }
 
 .skill-badge {
-  position: absolute;
-  top: 25px;
-  left: 112px;
+  flex: none;
   padding: 6px 9px;
   border: 1px solid #3a3a3a;
   border-radius: 999px;

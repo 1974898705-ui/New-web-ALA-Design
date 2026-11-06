@@ -183,7 +183,7 @@ export function createPopupSpec(form, variant = 0) {
 
 export function validatePopupSpec(
   spec,
-  { fontReady = false, generatedVisual = false, fullGeneratedArtwork = false } = {},
+  { fontReady = false, generatedVisual = false } = {},
 ) {
   const skill = popupSkillRuntime
 
@@ -203,19 +203,6 @@ export function validatePopupSpec(
       issues: [{
         code: 'SKILL_SCOPE_MISMATCH',
         message: `当前技能包${scopeIssues.join('，')}；本次结果为未套用规范的测试稿`,
-      }],
-      checkedRuleCount: 0,
-      skillVersion: skill.version,
-    }
-  }
-
-  if (fullGeneratedArtwork) {
-    return {
-      passed: false,
-      status: 'draft',
-      issues: [{
-        code: 'FULL_ARTWORK_UNVERIFIED',
-        message: '整张弹窗由 Cloudflare 生成，已注入技能规范，但像素结果仍需人工确认文字、坐标、字体、纯色与花边数量',
       }],
       checkedRuleCount: 0,
       skillVersion: skill.version,
@@ -278,8 +265,8 @@ export function validatePopupSpec(
   }
   if (generatedVisual) {
     issues.push({
-      code: 'TOP_VISUAL_UNVERIFIED',
-      message: 'AI 生成的顶部视觉需人工确认纯色、扁平、无文字且没有渐变或写实光影',
+      code: 'GENERATED_VISUAL_UNVERIFIED',
+      message: 'Cloudflare 视觉底图需人工确认无残留文字、纯色扁平、无渐变或写实光影；标题、Offer 与 CTA 已由规范排版器控制',
     })
   }
 

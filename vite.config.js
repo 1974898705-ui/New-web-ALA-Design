@@ -101,7 +101,7 @@ function cloudflareImageProxy({ accountId, apiToken }) {
             image: dataUri,
             provider: 'cloudflare-workers-ai',
             model: CLOUDFLARE_IMAGE_MODEL,
-            mode: 'full-artwork',
+            mode: 'visual-base',
             width: OUTPUT_WIDTH,
             height: OUTPUT_HEIGHT,
           })
