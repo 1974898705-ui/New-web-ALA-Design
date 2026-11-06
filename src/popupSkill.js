@@ -87,9 +87,18 @@ export const popupSkillRuntime = {
   themeProfiles,
 }
 
+function normalizeOptionalCopy(value) {
+  const copy = typeof value === 'string' ? value.trim() : ''
+  return /^(无|なし|none|n\/?a|-|—)$/iu.test(copy) ? '' : copy
+}
+
 export function createPopupSpec(form, variant = 0) {
   const skill = popupSkillRuntime
   const isSkillScoped = form.offerType === '单offer' && form.category === '本土节日弹窗'
+  const normalizedCopy = {
+    ...form,
+    subtitle: normalizeOptionalCopy(form.subtitle),
+  }
 
   if (!isSkillScoped) {
     const palette = doubleOfferPalettes[variant % doubleOfferPalettes.length]
@@ -133,7 +142,7 @@ export function createPopupSpec(form, variant = 0) {
         offer_supporting_text: { weight: 500 },
         cta: { weight: 900 },
       },
-      copy: { ...form },
+      copy: normalizedCopy,
     }
   }
 
@@ -177,7 +186,7 @@ export function createPopupSpec(form, variant = 0) {
       dark: '#16325C',
     },
     typography: skill.typography,
-    copy: { ...form },
+    copy: normalizedCopy,
   }
 }
 

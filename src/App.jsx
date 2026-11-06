@@ -229,14 +229,21 @@ function cleanDraftCopy(value, fallback) {
   return cleaned || fallback
 }
 
+function cleanOptionalDraftCopy(value) {
+  const cleaned = cleanDraftCopy(value, '')
+  return /^(无|なし|none|n\/?a|-|—)$/iu.test(cleaned) ? '' : cleaned
+}
+
 function splitTitle(value) {
   const title = cleanDraftCopy(value, '¡Algo especial para ti!')
 
   if (title.length <= 22) return [title]
 
-  const midpoint = Math.min(22, Math.ceil(title.length / 2))
-  const nearbySpace = title.lastIndexOf(' ', midpoint)
-  const splitAt = nearbySpace > 8 ? nearbySpace : midpoint
+  const midpoint = Math.ceil(title.length / 2)
+  const splitAt = Array.from(title.matchAll(/\s+/gu))
+    .map((match) => match.index)
+    .filter((index) => index >= 7 && title.length - index >= 5)
+    .sort((a, b) => Math.abs(a - midpoint) - Math.abs(b - midpoint))[0] ?? midpoint
 
   return [title.slice(0, splitAt).trim(), title.slice(splitAt).trim().slice(0, 24)]
 }
@@ -369,9 +376,9 @@ function PopupArtwork({ result }) {
             </tspan>
           ))}
         </text>
-        {titleLines.length === 1 && cleanDraftCopy(result.form.subtitle, '') && (
+        {titleLines.length === 1 && cleanOptionalDraftCopy(result.form.subtitle) && (
           <text x={centerX} y={titleBox.y + 36} fill={upperText} fontFamily="Roboto" fontSize="9" fontWeight={suffixWeight} textAnchor="middle">
-            {cleanDraftCopy(result.form.subtitle, '').slice(0, 38)}
+            {cleanOptionalDraftCopy(result.form.subtitle).slice(0, 38)}
           </text>
         )}
         <g fill={lowerText} fontFamily="Roboto" textAnchor="middle">
